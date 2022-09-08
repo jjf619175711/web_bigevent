@@ -33,15 +33,7 @@ function getUserInfo() {
             renderAvatar(res.data)
         },
         // 不管成功还是失败 都会调用complete回调函数
-        // complete: function (res) {
-        //     // console.log(res);
-        //     // responseJSON: {status: 1, message: '身份认证失败！'}
-        //     if (res.responseJSON.status === 1 && res.responseJSON.message === '身份认证失败！'){
-        //         //判断用户有没有登录，如果没有登录跳转到登录界面
-        //         localStorage.clear('token')
-        //         location.href = 'login.html'
-        //     }
-        // }
+       
 
     })
 
