@@ -1,8 +1,9 @@
 $(function () {
     var layer = layui.layer
     var form = layui.form
-
+    var id = location.search.substring(4)
     initCate()
+    initArtList()
     initEditor()
     function initCate() {
         $.ajax({
@@ -57,6 +58,7 @@ $(function () {
         e.preventDefault()
         var fd = new FormData($(this)[0])
         fd.append('state', art_state)
+        fd.append('Id',id)
         $image
             .cropper('getCroppedCanvas', { // 创建一个 Canvas 画布
                 width: 400,
@@ -64,21 +66,22 @@ $(function () {
             })
             .toBlob(function (blob) {       // 将 Canvas 画布上的内容，转化为文件对象
                 // 得到文件对象后，进行后续的操作
-                fd.append('cover_img',blob)
-                publisherArt(fd)
+                fd.append('cover_img', blob)
+                updateArt(fd)
             })
 
-          
+
     })
-    function publisherArt(fd){
+    // 更新文章
+    function updateArt(fd) {
         $.ajax({
-            method:'POST',
-            url:'/my/article/add',
-            data:fd,
-            contentType:false,
-            processData:false,
-            success:function(res){
-                if(res.status!=0){
+            method: 'POST',
+            url: '/my/article/edit',
+            data: fd,
+            contentType: false,
+            processData: false,
+            success: function (res) {
+                if (res.status != 0) {
                     return layer.msg(res.message)
                 }
                 layer.msg(res.message)
@@ -86,5 +89,21 @@ $(function () {
             }
         })
     }
-    
+
+    // 渲染发布文章页面 根据ID获取文章详情
+    function initArtList() {
+        $.ajax({
+            method: 'GET',
+            url: '/my/article/' + id,
+            success: function (res) {
+                if (res.status != 0) {
+                    return layer.msg(res.message)
+                }
+                form.val('form-edit', res.data)
+            }
+        })
+
+    }
+
+
 })
